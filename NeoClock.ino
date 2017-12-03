@@ -33,7 +33,7 @@ const uint8_t sunset[] = {976, 1042, 1102, 1226, 1286, 1328, 1316, 1257, 1177, 1
 //Transition time for changing brightness (in minutes). Total time from base to max is tTime*2
 const int tTime = 60;
 //Minimum and maximum brightness %. 
-const int minBrightness = 10;
+const int minBrightness = 00;
 const int maxBrightness = 100;
 
 //NeoPixel pin
@@ -159,7 +159,7 @@ int calcBrightness(int month, int hour, int minute){
 
 int getLDRBrightness(){
   int lSensor = analogRead(LDRPIN);
-  int brightness = map(lSensor, 400, 1023, minBrightness, maxBrightness);
+  int brightness = map(lSensor, 0, 1023, minBrightness, maxBrightness);
   return brightness;
 }
 
