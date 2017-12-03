@@ -33,13 +33,15 @@ const uint8_t sunset[] = {976, 1042, 1102, 1226, 1286, 1328, 1316, 1257, 1177, 1
 //Transition time for changing brightness (in minutes). Total time from base to max is tTime*2
 const int tTime = 60;
 //Minimum and maximum brightness %. 
-const int minBrightness = 15;
+const int minBrightness = 10;
 const int maxBrightness = 100;
 
 //NeoPixel pin
 #define PIN            2
 //Amount of neopixels
 #define NUMPIXELS      3
+
+#define LDRPIN         A7
 
 // When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
 // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
@@ -62,7 +64,7 @@ void setup() {
   pixels.setBrightness(100);
   // set the initial time here:
   // DS3231 seconds, minutes, hours, day, date, month, year
-  // setDS3231time(0,11,21,7,5,9,15);
+  // setDS3231time(40,24,16,7,3,12,17);
 }
 
 void setDS3231time(byte second, byte minute, byte hour, byte dayOfWeek, byte
@@ -155,6 +157,12 @@ int calcBrightness(int month, int hour, int minute){
   return brightness;
 }
 
+int getLDRBrightness(){
+  int lSensor = analogRead(LDRPIN);
+  int brightness = map(lSensor, 400, 1023, minBrightness, maxBrightness);
+  return brightness;
+}
+
 void loop() {
   byte second, minute, hour, dayOfWeek, dayOfMonth, month, year;
   // retrieve data from DS3231
@@ -171,11 +179,13 @@ void loop() {
   
   pixels.show(); // This sends the updated pixel color to the hardware.
   //If new minute, calculate new brightness and set it.
-  if (second == 0){
+  /*if (second == 0){
     pixels.setBrightness(calcBrightness(month, hour, minute));
-  }
+  }*/
+  pixels.setBrightness(getLDRBrightness());
 
   delay(1000); // Delay for a second
+  
 
 }
 
